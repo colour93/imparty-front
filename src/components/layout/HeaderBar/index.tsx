@@ -5,13 +5,20 @@ import {
   Menu,
   MenuItem,
   Tooltip,
-  Avatar,
   Container,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
+import { useUser } from "../../../stores/useUser";
+import { UserAvatar } from "../../UserAvatar";
+import { fetcher } from "../../../utils/fetcher";
+import { enqueueSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 
 export const HeaderBar: React.FC = () => {
+  const user = useUser();
+  const navigate = useNavigate();
+
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -30,6 +37,15 @@ export const HeaderBar: React.FC = () => {
     {
       key: "logout",
       label: "登出",
+      onClick: async () => {
+        await fetcher("/auth/logout", {
+          method: "post",
+        });
+        enqueueSnackbar("您已退出登录", {
+          variant: "success",
+        });
+        navigate("/auth");
+      },
     },
   ];
 
@@ -53,10 +69,13 @@ export const HeaderBar: React.FC = () => {
 
           <div className="hidden md:flex flex-1"></div>
 
-          <div className="flex-0">
+          <div className="flex items-center flex-0 gap-3">
+            <span className="hidden md:flex cursor-default">
+              {user.isLoading ? "加载中" : user.user?.name}
+            </span>
             <Tooltip title="设置">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <UserAvatar user={user.user} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -75,8 +94,10 @@ export const HeaderBar: React.FC = () => {
               onClose={handleCloseUserMenu}
               className="mt-12"
             >
-              {USER_MENU.map(({ key, label }) => (
-                <MenuItem key={key}>{label}</MenuItem>
+              {USER_MENU.map(({ key, label, onClick }) => (
+                <MenuItem key={key} onClick={onClick}>
+                  {label}
+                </MenuItem>
               ))}
             </Menu>
           </div>
