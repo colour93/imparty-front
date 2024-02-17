@@ -6,6 +6,7 @@ import {
   MenuItem,
   Tooltip,
   Container,
+  ListItemIcon,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
@@ -14,9 +15,14 @@ import { UserAvatar } from "../../UserAvatar";
 import { fetcher } from "../../../utils/fetcher";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
+import {
+  Settings as SettingsIcon,
+  Logout as LogoutIcon,
+} from "@mui/icons-material";
 
 export const HeaderBar: React.FC = () => {
-  const user = useUser();
+  const userData = useUser();
+  const { user, isLoading } = userData;
   const navigate = useNavigate();
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
@@ -33,10 +39,12 @@ export const HeaderBar: React.FC = () => {
     {
       key: "setting",
       label: "设置",
+      icon: <SettingsIcon fontSize="small" />,
     },
     {
       key: "logout",
       label: "登出",
+      icon: <LogoutIcon fontSize="small" />,
       onClick: async () => {
         await fetcher("/auth/logout", {
           method: "post",
@@ -50,7 +58,10 @@ export const HeaderBar: React.FC = () => {
   ];
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="fixed"
+      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <IconButton
@@ -59,11 +70,16 @@ export const HeaderBar: React.FC = () => {
             aria-controls="platform-list-drawer"
             aria-haspopup="true"
             color="inherit"
-            className="flex-0"
+            className="flex-0 md:!hidden"
           >
             <MenuIcon />
           </IconButton>
-          <div className="mx-4 flex flex-1 justify-center md:flex-0 md:justify-normal font-mono text-lg font-700">
+          <div
+            className="mx-4 flex flex-1 justify-center md:flex-0 md:justify-normal font-mono text-lg font-700 cursor-pointer"
+            onClick={() => {
+              navigate("/");
+            }}
+          >
             <span>Imparty</span>
           </div>
 
@@ -71,11 +87,11 @@ export const HeaderBar: React.FC = () => {
 
           <div className="flex items-center flex-0 gap-3">
             <span className="hidden md:flex cursor-default">
-              {user.isLoading ? "加载中" : user.user?.name}
+              {isLoading ? "加载中" : user?.name}
             </span>
             <Tooltip title="设置">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <UserAvatar user={user.user} />
+                <UserAvatar user={user} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -94,8 +110,9 @@ export const HeaderBar: React.FC = () => {
               onClose={handleCloseUserMenu}
               className="mt-12"
             >
-              {USER_MENU.map(({ key, label, onClick }) => (
+              {USER_MENU.map(({ key, label, icon, onClick }) => (
                 <MenuItem key={key} onClick={onClick}>
+                  {icon && <ListItemIcon>{icon}</ListItemIcon>}
                   {label}
                 </MenuItem>
               ))}

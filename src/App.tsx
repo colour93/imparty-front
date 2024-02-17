@@ -3,6 +3,7 @@ import { HomeWrapper } from "./components/layout/wrapper/home";
 import { Outlet } from "react-router-dom";
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
 import { SWRConfig } from "swr";
+import { PlatformDrawer } from "./components/layout/PlatformDrawer";
 
 const App: React.FC = () => {
   const isAuth = useMemo(
@@ -27,6 +28,7 @@ const App: React.FC = () => {
           },
         }}
       >
+        <PlatformDrawer />
         {isAuth ? (
           <Outlet />
         ) : (

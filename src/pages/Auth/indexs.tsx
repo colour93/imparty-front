@@ -105,6 +105,7 @@ export const AuthPage: React.FC = () => {
             error={idError}
             helperText={idError && "ID 应为 3-16 位英文字母、数字与下划线"}
             value={formData.id}
+            required={!isLogin}
           />
           {!isLogin && (
             <TextField
@@ -126,6 +127,7 @@ export const AuthPage: React.FC = () => {
               passwordError && "密码应为 8-24 位英文字母、数字与半角字符"
             }
             value={formData.password}
+            required={!isLogin}
           />
           {!isLogin && (
             <TextField
@@ -136,6 +138,7 @@ export const AuthPage: React.FC = () => {
               onChange={handleInputChange}
               error={confirmPasswordError}
               value={formData.confirmPassword}
+              required
             />
           )}
           <div className="flex gap-4">
