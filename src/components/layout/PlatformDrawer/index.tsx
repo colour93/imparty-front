@@ -6,18 +6,21 @@ import {
   List,
   ListItem,
   ListItemButton,
+  ListItemIcon,
   ListItemText,
   Toolbar,
 } from "@mui/material";
 import React, { useState } from "react";
 import { useUser } from "../../../stores/useUser";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { PlatformCreateModal } from "../../modals/PlatformCreateModal";
 import { PlatformJoinModal } from "../../modals/PlatformJoinModal";
+import { CheckCircle, Home } from "@mui/icons-material";
 
 export const PlatformDrawer: React.FC = () => {
   const navigate = useNavigate();
   const userData = useUser();
+  const { pid } = useParams();
 
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [joinModalVisible, setJoinModalVisible] = useState(false);
@@ -40,6 +43,21 @@ export const PlatformDrawer: React.FC = () => {
     >
       <Toolbar />
       <Box sx={{ overflow: "auto" }}>
+        <List>
+          <ListItemButton
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            <ListItem key="index" disablePadding>
+              <ListItemIcon>
+                <Home />
+              </ListItemIcon>
+              <ListItemText primary={"首页"} />
+            </ListItem>
+          </ListItemButton>
+        </List>
+        <Divider />
         {user.platforms.length === 0 ? (
           <span className="m-4 text-center text-sm">空空如也</span>
         ) : (
@@ -51,6 +69,9 @@ export const PlatformDrawer: React.FC = () => {
                     navigate("/p/".concat(id));
                   }}
                 >
+                  <ListItemIcon>
+                    {pid && pid === id && <CheckCircle />}
+                  </ListItemIcon>
                   <ListItemText
                     primary={
                       !name || name === "" ? "未命名 - ".concat(id) : name

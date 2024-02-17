@@ -35,6 +35,13 @@ export const RoomCard: React.FC<Props> = ({ room }) => {
     [room.endAt]
   );
 
+  const isPlaying = useMemo(
+    () =>
+      new Date(room.startAt).getTime() < Date.now() &&
+      new Date(room.endAt).getTime() > Date.now(),
+    [room.startAt, room.endAt]
+  );
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -79,6 +86,7 @@ export const RoomCard: React.FC<Props> = ({ room }) => {
         <div className="flex gap-1">
           {isExpired && <Chip size="small" color="error" label="已过期" />}
           {isFull && <Chip size="small" color="warning" label="已满员" />}
+          {isPlaying && <Chip size="small" color="success" label="进行中" />}
         </div>
       </div>
       <div className="flex flex-col gap-2">
@@ -97,14 +105,16 @@ export const RoomCard: React.FC<Props> = ({ room }) => {
         <div>
           <Chip size="small" variant="outlined" label={room.game} />
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <Chip
             size="small"
             variant="outlined"
             color="primary"
             label={momentZh(room.startAt).calendar()}
           />
-          <span>-</span>
+          <span className="opacity-80 text-xs">
+            {momentZh(room.endAt).diff(momentZh(room.startAt), "hours")} 小时
+          </span>
           <Chip
             size="small"
             variant="outlined"

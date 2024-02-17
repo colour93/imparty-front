@@ -7,7 +7,7 @@ interface Props {
 
 export const MainContainer: React.FC<Props> = ({ children }) => {
   return (
-    <div className="p-3 flex-1">
+    <div className="p-6 flex-1">
       <Toolbar />
       {children}
     </div>

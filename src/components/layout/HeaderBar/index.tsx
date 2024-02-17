@@ -18,7 +18,9 @@ import { useNavigate } from "react-router-dom";
 import {
   Settings as SettingsIcon,
   Logout as LogoutIcon,
+  AccountCircle,
 } from "@mui/icons-material";
+import { AvatarUploadModal } from "../../modals/AvatarUploadModal";
 
 export const HeaderBar: React.FC = () => {
   const userData = useUser();
@@ -35,7 +37,18 @@ export const HeaderBar: React.FC = () => {
     setAnchorElUser(null);
   };
 
+  const [avatarUploadModalVisible, setAvatarUploadModalVisible] =
+    useState(false);
+
   const USER_MENU = [
+    {
+      key: "upload-avatar",
+      label: "修改头像",
+      icon: <AccountCircle fontSize="small" />,
+      onClick: () => {
+        setAvatarUploadModalVisible(true);
+      },
+    },
     {
       key: "setting",
       label: "设置",
@@ -120,6 +133,12 @@ export const HeaderBar: React.FC = () => {
           </div>
         </Toolbar>
       </Container>
+
+      <AvatarUploadModal
+        visible={avatarUploadModalVisible}
+        setVisible={setAvatarUploadModalVisible}
+        userId={user?.id}
+      />
     </AppBar>
   );
 };
