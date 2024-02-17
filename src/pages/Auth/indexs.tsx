@@ -92,7 +92,7 @@ export const AuthPage: React.FC = () => {
         <title>{formTypeLabel} - Imparty</title>
       </Helmet>
 
-      <div className="h-screen w-auto flex justify-center items-center">
+      <div className="h-screen w-screen w-auto flex justify-center items-center">
         <div className="max-w-md flex flex-col gap-4 flex-1">
           <h2 className="text-3xl font-bold mb-4 text-center">
             {formTypeLabel}

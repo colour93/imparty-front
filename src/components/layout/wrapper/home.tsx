@@ -1,5 +1,6 @@
 import React from "react";
 import { HeaderBar } from "../HeaderBar";
+import { MainContainer } from "../MainContainer";
 
 interface Props {
   children: React.ReactNode;
@@ -8,8 +9,10 @@ interface Props {
 export const HomeWrapper: React.FC<Props> = ({ children }) => {
   return (
     <>
-      <HeaderBar />
-      {children}
+      <MainContainer>
+        <HeaderBar />
+        {children}
+      </MainContainer>
     </>
   );
 };

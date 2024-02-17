@@ -1,5 +1,131 @@
-import React from "react";
+import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
+import { usePlatform } from "../../stores/usePlatform";
+import { useParams } from "react-router";
+import {
+  Chip,
+  Grid,
+  Skeleton,
+  SpeedDial,
+  SpeedDialAction,
+  SpeedDialIcon,
+} from "@mui/material";
+import { RoomCard } from "../../components/RoomCard";
+import { AddCircleOutline, Login } from "@mui/icons-material";
+import { RoomCreateModal } from "../../components/modals/RoomCreateModal";
+import copy from "copy-text-to-clipboard";
+import { enqueueSnackbar } from "notistack";
+import { RoomJoinModal } from "../../components/modals/RoomJoinModal";
+import { VISIBLE_MAPPER } from "../../typings/platform";
 
 export const PlatformPage: React.FC = () => {
-  return <></>;
+  const { pid } = useParams();
+
+  const { platform, isLoading } = usePlatform(pid);
+
+  const [sppedDialVisible, setSpeedDialVisible] = useState(false);
+  const [roomCreateModalVisible, setRoomCreateModalVisible] = useState(false);
+  const [roomJoinModalVisible, setRoomJoinModalVisible] = useState(false);
+
+  return isLoading ? (
+    <>
+      <Helmet>
+        <title>加载中... - Imparty</title>
+      </Helmet>
+      <div className="flex flex-col">
+        <Skeleton animation="wave" variant="text" width="8rem" height="3rem" />
+        <Skeleton animation="wave" variant="text" width="5rem" height="2rem" />
+        <Skeleton
+          animation="wave"
+          variant="text"
+          width="6rem"
+          height="1.5rem"
+        />
+      </div>
+    </>
+  ) : (
+    <>
+      <Helmet>
+        <title>{platform?.name || platform?.id || "平台"} - Imparty</title>
+      </Helmet>
+
+      <RoomCreateModal
+        visible={roomCreateModalVisible}
+        setVisible={setRoomCreateModalVisible}
+      />
+      <RoomJoinModal
+        visible={roomJoinModalVisible}
+        setVisible={setRoomJoinModalVisible}
+      />
+
+      <SpeedDial
+        ariaLabel="room control button"
+        sx={{ position: "absolute", bottom: 16, right: 16 }}
+        icon={<SpeedDialIcon />}
+        onClose={() => {
+          setSpeedDialVisible(false);
+        }}
+        onOpen={() => {
+          setSpeedDialVisible(true);
+        }}
+        open={sppedDialVisible}
+      >
+        <SpeedDialAction
+          key="create-room"
+          icon={<AddCircleOutline />}
+          tooltipTitle={"创建房间"}
+          tooltipOpen
+          onClick={() => setRoomCreateModalVisible(true)}
+        />
+        <SpeedDialAction
+          key="join-room"
+          icon={<Login />}
+          tooltipTitle={"加入房间"}
+          tooltipOpen
+          onClick={() => setRoomJoinModalVisible(true)}
+        />
+      </SpeedDial>
+
+      <div className="flex flex-col gap-1 mb-4">
+        <p className="text-2xl font-bold">{platform?.name || platform?.id}</p>
+        <div className="flex gap-2">
+          <Chip
+            size="small"
+            label={`ID: ${platform?.id}`}
+            onClick={() => {
+              if (platform) {
+                copy(platform?.id);
+                enqueueSnackbar("复制成功", {
+                  variant: "success",
+                });
+              }
+            }}
+          />
+          <Chip
+            size="small"
+            label={`可见范围: ${
+              platform ? VISIBLE_MAPPER[platform?.visible].label : "未知"
+            }`}
+            color={
+              platform ? VISIBLE_MAPPER[platform?.visible].color : "default"
+            }
+          />
+        </div>
+        <span className="opacity-60 text-sm">
+          创建于:{" "}
+          {platform &&
+            platform.createdAt &&
+            new Date(platform.createdAt).toLocaleString()}
+        </span>
+      </div>
+
+      <Grid container spacing={2}>
+        {(platform?.rooms ?? []).map((room) => (
+          <Grid key={room.id} item xs={6} md={4} lg={3} xl={2}>
+            <RoomCard key={room.id} room={room} />
+          </Grid>
+        ))}
+      </Grid>
+    </>
+  );
 };

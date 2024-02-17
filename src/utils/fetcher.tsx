@@ -21,6 +21,11 @@ export const fetcher = async (input: RequestInfo | URL, init?: RequestInit) => {
     throw new Error("Network response was not ok");
   }
   const data: BaseResponse = await response.json();
+  if (data.code >= 300 && data.code < 400) {
+    enqueueSnackbar(data.msg, {
+      variant: "info",
+    });
+  }
   if (data.code >= 400 && data.code < 600) {
     enqueueSnackbar(data.msg, {
       variant: "error",

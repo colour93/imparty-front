@@ -4,6 +4,8 @@ import { Outlet } from "react-router-dom";
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
 import { SWRConfig } from "swr";
 import { PlatformDrawer } from "./components/layout/PlatformDrawer";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
 const App: React.FC = () => {
   const isAuth = useMemo(
@@ -12,32 +14,36 @@ const App: React.FC = () => {
   );
 
   return (
-    <>
-      <SnackbarProvider
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        autoHideDuration={3000}
-      />
-      <SWRConfig
-        value={{
-          onError: (err) => {
-            enqueueSnackbar("网络请求错误，详情请见控制台输出", {
-              variant: "error",
-            });
-            console.error(err);
-            throw err;
-          },
-        }}
-      >
-        <PlatformDrawer />
-        {isAuth ? (
-          <Outlet />
-        ) : (
-          <HomeWrapper>
+    <LocalizationProvider dateAdapter={AdapterMoment}>
+      <div className="flex">
+        <SnackbarProvider
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          autoHideDuration={3000}
+        />
+        <SWRConfig
+          value={{
+            onError: (err) => {
+              enqueueSnackbar("网络请求错误，详情请见控制台输出", {
+                variant: "error",
+              });
+              console.error(err);
+              throw err;
+            },
+          }}
+        >
+          {isAuth ? (
             <Outlet />
-          </HomeWrapper>
-        )}
-      </SWRConfig>
-    </>
+          ) : (
+            <>
+              <PlatformDrawer />
+              <HomeWrapper>
+                <Outlet />
+              </HomeWrapper>
+            </>
+          )}
+        </SWRConfig>
+      </div>
+    </LocalizationProvider>
   );
 };
 

@@ -15,7 +15,7 @@ export const useUser = () => {
   if (!user && location.pathname != "/auth") navigate("/auth");
 
   return {
-    user: user,
+    user,
     isLoading: !user && !error,
     isError: error,
   };
