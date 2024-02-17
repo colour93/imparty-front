@@ -77,6 +77,7 @@ export const RoomCard: React.FC<Props> = ({ room }) => {
     });
 
     if (pid) mutate("/platform/detail/".concat(pid));
+    else mutate("/user");
   };
 
   return (

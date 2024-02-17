@@ -1,12 +1,13 @@
 import { TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
+import React, { ChangeEvent, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { idRegex, passwordRegex } from "../../utils/regex";
 import _ from "lodash";
 import { enqueueSnackbar } from "notistack";
 import { useLocation, useNavigate } from "react-router-dom";
 import { fetcher } from "../../utils/fetcher";
+import { mutate } from "swr";
 
 export const AuthPage: React.FC = () => {
   const navigate = useNavigate();
@@ -38,10 +39,6 @@ export const AuthPage: React.FC = () => {
     () => !isLogin && formData.password != formData.confirmPassword,
     [isLogin, formData]
   );
-
-  useEffect(() => {
-    console.log();
-  }, []);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -83,6 +80,7 @@ export const AuthPage: React.FC = () => {
         variant: "success",
       }
     );
+    mutate("/user");
     navigate(redirectTarget ? decodeURI(redirectTarget) : "/");
   };
 
