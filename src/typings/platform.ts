@@ -9,7 +9,8 @@ export interface PlatformInfo {
   visible: PlatformVisible;
   createdAt: string;
   rooms: RoomInfo[];
-  users: UserBaseInfo[];
+  users?: UserBaseInfo[];
+  owner?: UserBaseInfo;
 }
 
 export type PlatformBaseInfo = Omit<PlatformInfo, "visible">;
@@ -32,3 +33,9 @@ export const VISIBLE_MAPPER: PlatformVisibleMapper = {
     label: "私人",
   },
 };
+
+export interface PlatformInviteInfo {
+  expiredMode: "date" | "count";
+  expiredAt?: string;
+  expiredCount?: number;
+}

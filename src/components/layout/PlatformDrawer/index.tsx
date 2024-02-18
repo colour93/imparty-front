@@ -59,7 +59,7 @@ export const PlatformDrawer: React.FC = () => {
         </List>
         <Divider />
         {user.platforms.length === 0 ? (
-          <span className="m-4 text-center text-sm">空空如也</span>
+          <span className="m-4 text-center w-full text-sm">空空如也</span>
         ) : (
           <List>
             {user.platforms.map(({ id, name }) => (

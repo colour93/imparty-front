@@ -9,7 +9,6 @@ import { enqueueSnackbar } from "notistack";
 import { fetcher } from "../../utils/fetcher";
 import { mutate } from "swr";
 import { useParams } from "react-router";
-import copy from "copy-text-to-clipboard";
 
 interface Props {
   room: RoomInfo;
@@ -95,10 +94,10 @@ export const RoomCard: React.FC<Props> = ({ room }) => {
           <Chip
             size="small"
             label={`ID: ${room.id}`}
-            onClick={() => {
-              copy(room.id);
-              enqueueSnackbar("复制成功", {
-                variant: "success",
+            onClick={async () => {
+              await navigator.clipboard.writeText(room.id);
+              enqueueSnackbar("已复制", {
+                variant: "info",
               });
             }}
           />

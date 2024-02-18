@@ -1,15 +1,15 @@
 import React, { ChangeEvent, useMemo, useRef, useState } from "react";
 import Cropper, { ReactCropperElement } from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import { Backdrop, Box, Button, Fade, Modal } from "@mui/material";
+import { Button } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
-import { MODAL_BOX_STYLE, ModalFooter, ModalTitle } from "../frame";
 import { BASE_URL } from "../../../config";
 import { LoadingButton } from "@mui/lab";
 import { CloudUpload } from "@mui/icons-material";
 import { fetcher } from "../../../utils/fetcher";
+import { CommonModal } from "../template";
 
-export interface Props {
+interface Props {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   userId?: string;
@@ -85,75 +85,57 @@ export const AvatarUploadModal: React.FC<Props> = ({
   };
 
   return (
-    <Modal
-      aria-labelledby="avatar upload modal title"
-      aria-describedby="avatar upload modal description"
-      open={visible}
-      onClose={() => setVisible(false)}
-      closeAfterTransition
-      slots={{ backdrop: Backdrop }}
-      slotProps={{
-        backdrop: {
-          timeout: 500,
-        },
-      }}
+    <CommonModal
+      visible={visible}
+      setVisible={setVisible}
+      title="修改头像"
+      footer={
+        <>
+          <Button onClick={() => setVisible(false)}>
+            <span>取消</span>
+          </Button>
+          <LoadingButton loading={isLoading} onClick={() => handleConfirm()}>
+            <span>确定</span>
+          </LoadingButton>
+        </>
+      }
     >
-      <Fade in={visible}>
-        <Box sx={MODAL_BOX_STYLE}>
-          <div className="flex flex-col gap-6">
-            <ModalTitle>修改头像</ModalTitle>
-            <div className="flex items-center justify-center gap-8">
-              <div className="flex flex-col items-center justify-center gap-5">
-                <div className="img-preview mb-4 size-52 overflow-hidden rounded-full"></div>
+      <div className="flex items-center justify-center gap-8">
+        <div className="flex flex-col items-center justify-center gap-5">
+          <div className="img-preview mb-4 size-52 overflow-hidden rounded-full"></div>
 
-                <Button
-                  component="label"
-                  role={undefined}
-                  variant="contained"
-                  tabIndex={-1}
-                  startIcon={<CloudUpload />}
-                >
-                  选择本地文件
-                  <input
-                    aria-label="upload avatar"
-                    className="h-1 w-1 overflow-hidden absolute bottom-0 left-0 whitespace-nowrap"
-                    style={{ clip: "rect(0 0 0 0)", clipPath: "inset(50%)" }}
-                    type="file"
-                    name="avatar"
-                    accept=".png, .jpg, .jpeg"
-                    onChange={handleFileSelect}
-                  />
-                </Button>
-              </div>
-              <Cropper
-                width={400}
-                ref={cropperRef}
-                src={selectImageUrl ?? rawImage}
-                guides={true}
-                className="h-80 overflow-clip rounded"
-                aspectRatio={1}
-                viewMode={1}
-                preview={".img-preview"}
-                minCropBoxHeight={64}
-                minCropBoxWidth={64}
-              />
-            </div>
-            <ModalFooter>
-              <div>
-                <Button onClick={() => setVisible(false)}>
-                  <span>取消</span>
-                </Button>
-                <LoadingButton
-                  loading={isLoading}
-                  onClick={() => handleConfirm()}
-                >
-                  <span>确定</span>
-                </LoadingButton>
-              </div>
-            </ModalFooter>
-          </div>
-        </Box>
-      </Fade>
-    </Modal>
+          <Button
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+            startIcon={<CloudUpload />}
+          >
+            选择本地文件
+            <input
+              aria-label="upload avatar"
+              className="h-1 w-1 overflow-hidden absolute bottom-0 left-0 whitespace-nowrap"
+              style={{ clip: "rect(0 0 0 0)", clipPath: "inset(50%)" }}
+              type="file"
+              name="avatar"
+              accept=".png, .jpg, .jpeg"
+              onChange={handleFileSelect}
+            />
+          </Button>
+        </div>
+        <Cropper
+          width={400}
+          ref={cropperRef}
+          src={selectImageUrl ?? rawImage}
+          guides={true}
+          className="h-80 overflow-clip rounded"
+          aspectRatio={1}
+          viewMode={1}
+          preview={".img-preview"}
+          minCropBoxHeight={64}
+          minCropBoxWidth={64}
+        />
+      </div>
+    </CommonModal>
   );
 };

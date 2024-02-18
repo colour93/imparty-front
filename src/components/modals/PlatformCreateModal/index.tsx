@@ -1,8 +1,4 @@
 import {
-  Modal,
-  Backdrop,
-  Fade,
-  Box,
   TextField,
   Button,
   FormControl,
@@ -12,13 +8,13 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import React, { ChangeEvent, useMemo, useState } from "react";
-import { MODAL_BOX_STYLE, ModalFooter, ModalTitle } from "../frame";
 import { idRegex } from "../../../utils/regex";
 import { enqueueSnackbar } from "notistack";
 import { LoadingButton } from "@mui/lab";
 import { fetcher } from "../../../utils/fetcher";
 import { mutate } from "swr";
 import { PlatformVisible, VISIBLE_MAPPER } from "../../../typings/platform";
+import { CommonModal } from "../template";
 
 interface Props {
   visible: boolean;
@@ -29,12 +25,13 @@ export const PlatformCreateModal: React.FC<Props> = ({
   visible,
   setVisible,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     id: "",
     name: "",
     visible: "public",
   });
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (
     e:
@@ -76,69 +73,56 @@ export const PlatformCreateModal: React.FC<Props> = ({
   };
 
   return (
-    <Modal
-      aria-labelledby="platform create modal title"
-      aria-describedby="platform create modal description"
-      open={visible}
-      onClose={() => setVisible(false)}
-      closeAfterTransition
-      slots={{ backdrop: Backdrop }}
-      slotProps={{
-        backdrop: {
-          timeout: 500,
-        },
-      }}
+    <CommonModal
+      title="新建平台"
+      footer={
+        <>
+          <Button onClick={() => setVisible(false)}>
+            <span>取消</span>
+          </Button>
+          <LoadingButton loading={isLoading} onClick={() => handleSubmit()}>
+            <span>新建</span>
+          </LoadingButton>
+        </>
+      }
+      visible={visible}
+      setVisible={setVisible}
     >
-      <Fade in={visible}>
-        <Box sx={MODAL_BOX_STYLE}>
-          <div className="flex flex-col gap-6">
-            <ModalTitle>新建平台</ModalTitle>
-            <div className="flex flex-col gap-4">
-              <TextField
-                label="ID"
-                name="id"
-                error={idError}
-                helperText={idError && "ID 应为 3-16 位英文字母、数字与下划线"}
-                required
-                value={formData.id}
-                onChange={handleInputChange}
-              />
-              <TextField
-                label="名称"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-              />
-              <FormControl fullWidth required>
-                <InputLabel id="platform-create-modal-visible-select-label">
-                  可见范围
-                </InputLabel>
-                <Select
-                  labelId="platform-create-modal-visible-select-label"
-                  name="visible"
-                  label="可见范围"
-                  value={formData.visible}
-                  onChange={handleInputChange}
-                >
-                  {Object.keys(VISIBLE_MAPPER).map((key) => (
-                    <MenuItem key={key} value={key}>
-                      {VISIBLE_MAPPER[key as PlatformVisible].label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-            <ModalFooter>
-              <Button onClick={() => setVisible(false)}>
-                <span>取消</span>
-              </Button>
-              <LoadingButton loading={isLoading} onClick={() => handleSubmit()}>
-                <span>新建</span>
-              </LoadingButton>
-            </ModalFooter>
-          </div>
-        </Box>
-      </Fade>
-    </Modal>
+      <div className="flex flex-col gap-4">
+        <TextField
+          label="ID"
+          name="id"
+          error={idError}
+          helperText={idError && "ID 应为 3-16 位英文字母、数字与下划线"}
+          required
+          value={formData.id}
+          onChange={handleInputChange}
+        />
+        <TextField
+          label="名称"
+          name="name"
+          value={formData.name}
+          onChange={handleInputChange}
+        />
+        <FormControl fullWidth required>
+          <InputLabel id="platform-create-modal-visible-select-label">
+            可见范围
+          </InputLabel>
+          <Select
+            labelId="platform-create-modal-visible-select-label"
+            name="visible"
+            label="可见范围"
+            value={formData.visible}
+            onChange={handleInputChange}
+          >
+            {Object.keys(VISIBLE_MAPPER).map((key) => (
+              <MenuItem key={key} value={key}>
+                {VISIBLE_MAPPER[key as PlatformVisible].label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
+    </CommonModal>
   );
 };

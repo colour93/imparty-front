@@ -21,6 +21,7 @@ import {
   AccountCircle,
 } from "@mui/icons-material";
 import { AvatarUploadModal } from "../../modals/AvatarUploadModal";
+import { UserSettingModal } from "../../modals/UserSettingModal";
 
 export const HeaderBar: React.FC = () => {
   const userData = useUser();
@@ -40,6 +41,9 @@ export const HeaderBar: React.FC = () => {
   const [avatarUploadModalVisible, setAvatarUploadModalVisible] =
     useState(false);
 
+  const [userSettingsModalVisible, setUserSettingsModalVisible] =
+    useState(false);
+
   const USER_MENU = [
     {
       key: "upload-avatar",
@@ -47,12 +51,17 @@ export const HeaderBar: React.FC = () => {
       icon: <AccountCircle fontSize="small" />,
       onClick: () => {
         setAvatarUploadModalVisible(true);
+        handleCloseUserMenu();
       },
     },
     {
       key: "setting",
       label: "设置",
       icon: <SettingsIcon fontSize="small" />,
+      onClick: () => {
+        setUserSettingsModalVisible(true);
+        handleCloseUserMenu();
+      },
     },
     {
       key: "logout",
@@ -65,6 +74,7 @@ export const HeaderBar: React.FC = () => {
         enqueueSnackbar("您已退出登录", {
           variant: "success",
         });
+        handleCloseUserMenu();
         navigate("/auth");
       },
     },
@@ -138,6 +148,11 @@ export const HeaderBar: React.FC = () => {
         visible={avatarUploadModalVisible}
         setVisible={setAvatarUploadModalVisible}
         userId={user?.id}
+      />
+
+      <UserSettingModal
+        visible={userSettingsModalVisible}
+        setVisible={setUserSettingsModalVisible}
       />
     </AppBar>
   );

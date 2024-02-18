@@ -5,23 +5,26 @@ import { useParams } from "react-router";
 import {
   Chip,
   Grid,
+  IconButton,
   Skeleton,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
 } from "@mui/material";
 import { RoomCard } from "../../components/RoomCard";
-import { AddCircleOutline, Login } from "@mui/icons-material";
+import { AddCircleOutline, Login, MoreVert } from "@mui/icons-material";
 import { RoomCreateModal } from "../../components/modals/RoomCreateModal";
-import copy from "copy-text-to-clipboard";
 import { enqueueSnackbar } from "notistack";
 import { RoomJoinModal } from "../../components/modals/RoomJoinModal";
 import { VISIBLE_MAPPER } from "../../typings/platform";
+import { useUser } from "../../stores/useUser";
+import { PlatformInviteButton } from "../../components/PlatformButtons/invite";
 
 export const PlatformPage: React.FC = () => {
   const { pid } = useParams();
 
   const { platform, isLoading } = usePlatform(pid);
+  const { user, isLoading: isUserLoading } = useUser();
 
   const [sppedDialVisible, setSpeedDialVisible] = useState(false);
   const [roomCreateModalVisible, setRoomCreateModalVisible] = useState(false);
@@ -86,37 +89,52 @@ export const PlatformPage: React.FC = () => {
         />
       </SpeedDial>
 
-      <div className="flex flex-col gap-1 mb-4">
-        <p className="text-2xl font-bold">{platform?.name || platform?.id}</p>
-        <div className="flex gap-2">
-          <Chip
-            size="small"
-            label={`ID: ${platform?.id}`}
-            onClick={() => {
-              if (platform) {
-                copy(platform?.id);
-                enqueueSnackbar("复制成功", {
-                  variant: "success",
-                });
+      <div className="flex justify-between mb-4 items-center">
+        <div className="flex flex-col gap-1">
+          <p className="text-2xl font-bold">{platform?.name || platform?.id}</p>
+          <div className="flex gap-2">
+            <Chip
+              size="small"
+              label={`ID: ${platform?.id}`}
+              onClick={async () => {
+                if (platform) {
+                  await navigator.clipboard.writeText(platform.id);
+                  enqueueSnackbar("已复制", {
+                    variant: "info",
+                  });
+                }
+              }}
+            />
+            <Chip
+              size="small"
+              label={`可见范围: ${
+                platform ? VISIBLE_MAPPER[platform?.visible].label : "未知"
+              }`}
+              color={
+                platform ? VISIBLE_MAPPER[platform?.visible].color : "default"
               }
-            }}
-          />
-          <Chip
-            size="small"
-            label={`可见范围: ${
-              platform ? VISIBLE_MAPPER[platform?.visible].label : "未知"
-            }`}
-            color={
-              platform ? VISIBLE_MAPPER[platform?.visible].color : "default"
-            }
-          />
+            />
+          </div>
+          <span className="opacity-60 text-sm">
+            创建于:{" "}
+            {platform &&
+              platform.createdAt &&
+              new Date(platform.createdAt).toLocaleString()}
+          </span>
         </div>
-        <span className="opacity-60 text-sm">
-          创建于:{" "}
-          {platform &&
-            platform.createdAt &&
-            new Date(platform.createdAt).toLocaleString()}
-        </span>
+
+        <div className="flex">
+          {!isLoading &&
+            platform &&
+            ["public", "invite-only"].includes(platform.visible) && (
+              <PlatformInviteButton platform={platform} />
+            )}
+          {!isUserLoading && !isLoading && platform?.owner?.id === user?.id && (
+            <IconButton aria-label="more">
+              <MoreVert />
+            </IconButton>
+          )}
+        </div>
       </div>
 
       <Grid container spacing={2}>

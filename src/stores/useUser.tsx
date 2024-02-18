@@ -12,7 +12,10 @@ export const useUser = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  if (!user && location.pathname != "/auth") navigate("/auth");
+  const redirect = encodeURI(location.pathname + location.search);
+
+  if (!user && location.pathname != "/auth")
+    navigate("/auth".concat(`?redirect=`).concat(redirect));
 
   return {
     user,

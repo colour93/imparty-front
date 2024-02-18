@@ -38,9 +38,6 @@ dependencies:
   classnames:
     specifier: ^2.5.1
     version: 2.5.1
-  copy-text-to-clipboard:
-    specifier: ^3.2.0
-    version: 3.2.0
   cropperjs:
     specifier: ^1.6.1
     version: 1.6.1
@@ -1599,11 +1596,6 @@ packages:
 
   /convert-source-map@1.9.0:
     resolution: {integrity: sha512-ASFBup0Mz1uyiIjANan1jzLQami9z1PoYSZCiiYW2FczPbenXc45FZdBZLzOT+r6+iciuEModtmCti+hjaAk0A==}
-    dev: false
-
-  /copy-text-to-clipboard@3.2.0:
-    resolution: {integrity: sha512-RnJFp1XR/LOBDckxTib5Qjr/PMfkatD0MUCQgdpqS8MdKiNUzBjAQBEN6oUy+jW7LI93BBG3DtMB2KOOKpGs2Q==}
-    engines: {node: '>=12'}
     dev: false
 
   /cosmiconfig@7.1.0:
