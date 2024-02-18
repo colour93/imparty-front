@@ -1,6 +1,8 @@
 import React, { ChangeEvent, useMemo, useState } from "react";
 import { PlatformInfo, PlatformInviteInfo } from "../../../typings/platform";
 import {
+  Alert,
+  AlertTitle,
   Button,
   FormControl,
   FormControlLabel,
@@ -51,7 +53,7 @@ export const PlatformInviteModal: React.FC<Props> = ({
   };
 
   useMemo(() => {
-    setCode(undefined);
+    if (visible) setCode(undefined);
   }, [visible]);
 
   const handleSubmit = async () => {
@@ -163,6 +165,44 @@ export const PlatformInviteModal: React.FC<Props> = ({
           </>
         ) : (
           <>
+            {platform?.visible === "public" && (
+              <Alert security="success" icon={false} className="[&>div]:w-full">
+                <div className="flex flex-col gap-2">
+                  <AlertTitle>
+                    本平台为公开平台，可通过以下链接直接加入
+                  </AlertTitle>
+                  <FormControl>
+                    <InputLabel htmlFor="public-url-input">公开链接</InputLabel>
+                    <OutlinedInput
+                      id="public-url-input"
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={async () => {
+                              await navigator.clipboard.writeText(
+                                window.location.origin
+                                  .concat("/join/")
+                                  .concat(platform.id)
+                              );
+                              enqueueSnackbar("已复制", {
+                                variant: "info",
+                              });
+                            }}
+                          >
+                            <ContentCopy />
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      readOnly
+                      value={window.location.origin
+                        .concat("/join/")
+                        .concat(platform.id)}
+                      label="公开链接"
+                    />
+                  </FormControl>
+                </div>
+              </Alert>
+            )}
             <FormControl required>
               <FormLabel id="expired-mode-radio-buttons-group-label">
                 过期方式

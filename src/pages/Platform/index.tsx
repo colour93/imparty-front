@@ -5,19 +5,17 @@ import { useParams } from "react-router";
 import {
   Chip,
   Grid,
-  IconButton,
   Skeleton,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
 } from "@mui/material";
 import { RoomCard } from "../../components/RoomCard";
-import { AddCircleOutline, Login, MoreVert } from "@mui/icons-material";
+import { AddCircleOutline, Login } from "@mui/icons-material";
 import { RoomCreateModal } from "../../components/modals/RoomCreateModal";
 import { enqueueSnackbar } from "notistack";
 import { RoomJoinModal } from "../../components/modals/RoomJoinModal";
 import { VISIBLE_MAPPER } from "../../typings/platform";
-import { useUser } from "../../stores/useUser";
 import { PlatformInviteButton } from "../../components/PlatformButtons/invite";
 import { PlatformMoreButton } from "../../components/PlatformButtons/more";
 
@@ -25,7 +23,6 @@ export const PlatformPage: React.FC = () => {
   const { pid } = useParams();
 
   const { platform, isLoading } = usePlatform(pid);
-  const { user, isLoading: isUserLoading } = useUser();
 
   const [sppedDialVisible, setSpeedDialVisible] = useState(false);
   const [roomCreateModalVisible, setRoomCreateModalVisible] = useState(false);

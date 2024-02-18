@@ -21,14 +21,23 @@ export const ModalTitle: React.FC<ModalTitleProps> = ({ children }) => {
 
 interface ModalFooterProps {
   children: React.ReactNode;
-  align?: "start" | "end" | "center" | "between";
+  justify?: "start" | "end" | "center" | "between" | "around" | "normal";
 }
 export const ModalFooter: React.FC<ModalFooterProps> = ({
   children,
-  align = "end",
+  justify = "end",
 }) => {
   return (
-    <div className={classNames("modal-footer flex", "justify-".concat(align))}>
+    <div
+      className={classNames("modal-footer flex", {
+        "justify-start": justify === "start",
+        "justify-center": justify === "center",
+        "justify-between": justify === "between",
+        "justify-around": justify === "around",
+        "justify-normal": justify === "normal",
+        "justify-end": justify === "end",
+      })}
+    >
       {children}
     </div>
   );

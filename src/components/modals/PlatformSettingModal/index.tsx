@@ -1,5 +1,13 @@
-import { TextField, SelectChangeEvent, Button } from "@mui/material";
-import { useUser } from "../../../stores/useUser";
+import {
+  TextField,
+  SelectChangeEvent,
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 import _ from "lodash";
 import { useState, ChangeEvent, useMemo } from "react";
 import { LoadingButton } from "@mui/lab";
@@ -7,21 +15,32 @@ import { enqueueSnackbar } from "notistack";
 import { fetcher } from "../../../utils/fetcher";
 import { mutate } from "swr";
 import { CommonModal } from "../template";
+import {
+  PlatformInfo,
+  PlatformVisible,
+  VISIBLE_MAPPER,
+} from "../../../typings/platform";
 
 interface Props {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  platform?: PlatformInfo;
 }
 
-export const UserSettingModal: React.FC<Props> = ({ visible, setVisible }) => {
-  const { user, isLoading } = useUser();
+export const PlatformSettingModal: React.FC<Props> = ({
+  visible,
+  setVisible,
+  platform,
+}) => {
   const [isRequestLoading, setIsRequestLoading] = useState(false);
 
-  const [formData, setFormData] = useState(_.pick(user, ["name"]));
+  const [formData, setFormData] = useState(
+    _.pick(platform, ["name", "visible"])
+  );
 
   useMemo(() => {
-    if (visible) setFormData(_.pick(user, ["name"]));
-  }, [user, visible]);
+    if (visible) setFormData(_.pick(platform, ["name", "visible"]));
+  }, [platform, visible]);
 
   const handleInputChange = (
     e:
@@ -32,7 +51,7 @@ export const UserSettingModal: React.FC<Props> = ({ visible, setVisible }) => {
   };
 
   const handleSubmit = async () => {
-    if (isLoading || isRequestLoading) {
+    if (isRequestLoading || !platform) {
       enqueueSnackbar("请等待加载完毕", {
         variant: "warning",
       });
@@ -41,7 +60,7 @@ export const UserSettingModal: React.FC<Props> = ({ visible, setVisible }) => {
 
     setIsRequestLoading(true);
 
-    const result = await fetcher("/user/update", {
+    const result = await fetcher("/platform/update/".concat(platform.id), {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -59,7 +78,7 @@ export const UserSettingModal: React.FC<Props> = ({ visible, setVisible }) => {
 
     setVisible(false);
 
-    mutate("/user");
+    mutate("/platform/detail/".concat(platform.id));
   };
 
   return (
@@ -81,22 +100,43 @@ export const UserSettingModal: React.FC<Props> = ({ visible, setVisible }) => {
         </>
       }
     >
-      {isLoading || !user ? (
+      {!platform ? (
         <div className="h-[400px] flex justify-center items-center">加载中</div>
       ) : (
         <div className="flex flex-col gap-4">
           <TextField
             label="ID"
-            helperText="注册后不允许更改"
+            helperText="创建后不允许更改"
             disabled
-            value={user.id}
+            value={platform.id}
           />
           <TextField
-            label="昵称"
+            label="名称"
             name="name"
             value={formData.name}
             onChange={handleInputChange}
           />
+          <FormControl fullWidth required>
+            <FormLabel id="platform-visible-radio-buttons-group-label">
+              可见范围
+            </FormLabel>
+            <RadioGroup
+              aria-labelledby="platform-visible-radio-buttons-group-label"
+              value={formData.visible}
+              name="visible"
+              row
+              onChange={handleInputChange}
+            >
+              {Object.keys(VISIBLE_MAPPER).map((key) => (
+                <FormControlLabel
+                  key={key}
+                  value={key}
+                  control={<Radio />}
+                  label={VISIBLE_MAPPER[key as PlatformVisible].label}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
         </div>
       )}
     </CommonModal>

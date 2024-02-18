@@ -6,7 +6,7 @@ import {
 } from "@mui/icons-material";
 import { IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { PlatformInfo } from "../../typings/platform";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useUser } from "../../stores/useUser";
 import { MenuItemType } from "../../typings/utils";
 import { ConfirmModal } from "../modals/ConfirmModal";
@@ -14,13 +14,14 @@ import { fetcher } from "../../utils/fetcher";
 import { enqueueSnackbar } from "notistack";
 import { mutate } from "swr";
 import { useNavigate } from "react-router";
+import { PlatformSettingModal } from "../modals/PlatformSettingModal";
 
 interface Props {
   platform?: PlatformInfo;
 }
 
 export const PlatformMoreButton: React.FC<Props> = ({ platform }) => {
-  const { user, isLoading: isUserLoading } = useUser();
+  const { user } = useUser();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -30,6 +31,9 @@ export const PlatformMoreButton: React.FC<Props> = ({ platform }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const [platformSettingModalVisible, setPlatformSettingModalVisible] =
+    useState(false);
 
   const handleDeletePlatform = async () => {
     if (!platform) {
@@ -57,6 +61,10 @@ export const PlatformMoreButton: React.FC<Props> = ({ platform }) => {
     });
   };
 
+  const handlePlatformSetting = async () => {
+    setPlatformSettingModalVisible(true);
+  };
+
   const isOwner = useMemo(
     () => platform?.owner?.id === user?.id,
     [platform, user]
@@ -67,11 +75,16 @@ export const PlatformMoreButton: React.FC<Props> = ({ platform }) => {
       key: "invite-list",
       label: "邀请列表",
       icon: <ListIcon fontSize="small" />,
+      disabled: true,
     },
     {
       key: "settings",
       label: "设置信息",
       icon: <Settings fontSize="small" />,
+      onClick: () => {
+        handlePlatformSetting();
+        handleClose();
+      },
     },
     {
       key: "delete",
@@ -79,6 +92,7 @@ export const PlatformMoreButton: React.FC<Props> = ({ platform }) => {
       icon: <Delete fontSize="small" />,
       onClick: () => {
         handleDeletePlatform();
+        handleClose();
       },
     },
   ];
@@ -105,14 +119,19 @@ export const PlatformMoreButton: React.FC<Props> = ({ platform }) => {
         }}
       >
         {(isOwner ? OWNER_MENU : USER_MENU).map(
-          ({ key, label, icon, onClick }) => (
-            <MenuItem key={key} onClick={onClick}>
+          ({ key, label, icon, onClick, disabled }) => (
+            <MenuItem key={key} onClick={onClick} disabled={disabled}>
               {icon && <ListItemIcon>{icon}</ListItemIcon>}
               {label}
             </MenuItem>
           )
         )}
       </Menu>
+      <PlatformSettingModal
+        visible={platformSettingModalVisible}
+        setVisible={setPlatformSettingModalVisible}
+        platform={platform}
+      />
     </>
   ) : (
     <></>

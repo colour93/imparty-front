@@ -2,10 +2,11 @@ import {
   TextField,
   Button,
   FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   SelectChangeEvent,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
 } from "@mui/material";
 import React, { ChangeEvent, useMemo, useState } from "react";
 import { idRegex } from "../../../utils/regex";
@@ -105,22 +106,25 @@ export const PlatformCreateModal: React.FC<Props> = ({
           onChange={handleInputChange}
         />
         <FormControl fullWidth required>
-          <InputLabel id="platform-create-modal-visible-select-label">
+          <FormLabel id="platform-visible-radio-buttons-group-label">
             可见范围
-          </InputLabel>
-          <Select
-            labelId="platform-create-modal-visible-select-label"
+          </FormLabel>
+          <RadioGroup
+            aria-labelledby="platform-visible-radio-buttons-group-label"
+            defaultValue="public"
             name="visible"
-            label="可见范围"
-            value={formData.visible}
+            row
             onChange={handleInputChange}
           >
             {Object.keys(VISIBLE_MAPPER).map((key) => (
-              <MenuItem key={key} value={key}>
-                {VISIBLE_MAPPER[key as PlatformVisible].label}
-              </MenuItem>
+              <FormControlLabel
+                key={key}
+                value={key}
+                control={<Radio />}
+                label={VISIBLE_MAPPER[key as PlatformVisible].label}
+              />
             ))}
-          </Select>
+          </RadioGroup>
         </FormControl>
       </div>
     </CommonModal>

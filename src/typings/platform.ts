@@ -13,7 +13,7 @@ export interface PlatformInfo {
   owner?: UserBaseInfo;
 }
 
-export type PlatformBaseInfo = Omit<PlatformInfo, "visible">;
+export type PlatformBaseInfo = Pick<PlatformInfo, "name" | "id" | "createdAt">;
 
 type PlatformVisibleMapper = Record<
   PlatformVisible,

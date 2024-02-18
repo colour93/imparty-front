@@ -3,4 +3,5 @@ export interface MenuItemType {
   label: string;
   icon?: React.ReactNode;
   onClick?: () => void;
+  disabled?: boolean;
 }
