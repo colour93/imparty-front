@@ -22,6 +22,7 @@ import {
 } from "@mui/icons-material";
 import { AvatarUploadModal } from "../../modals/AvatarUploadModal";
 import { UserSettingModal } from "../../modals/UserSettingModal";
+import { MenuItemType } from "../../../typings/utils";
 
 export const HeaderBar: React.FC = () => {
   const userData = useUser();
@@ -44,7 +45,7 @@ export const HeaderBar: React.FC = () => {
   const [userSettingsModalVisible, setUserSettingsModalVisible] =
     useState(false);
 
-  const USER_MENU = [
+  const USER_MENU: MenuItemType[] = [
     {
       key: "upload-avatar",
       label: "修改头像",
@@ -56,7 +57,7 @@ export const HeaderBar: React.FC = () => {
     },
     {
       key: "setting",
-      label: "设置",
+      label: "设置信息",
       icon: <SettingsIcon fontSize="small" />,
       onClick: () => {
         setUserSettingsModalVisible(true);
@@ -65,7 +66,7 @@ export const HeaderBar: React.FC = () => {
     },
     {
       key: "logout",
-      label: "登出",
+      label: "退出登录",
       icon: <LogoutIcon fontSize="small" />,
       onClick: async () => {
         await fetcher("/auth/logout", {

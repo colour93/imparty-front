@@ -19,6 +19,7 @@ import { RoomJoinModal } from "../../components/modals/RoomJoinModal";
 import { VISIBLE_MAPPER } from "../../typings/platform";
 import { useUser } from "../../stores/useUser";
 import { PlatformInviteButton } from "../../components/PlatformButtons/invite";
+import { PlatformMoreButton } from "../../components/PlatformButtons/more";
 
 export const PlatformPage: React.FC = () => {
   const { pid } = useParams();
@@ -129,11 +130,7 @@ export const PlatformPage: React.FC = () => {
             ["public", "invite-only"].includes(platform.visible) && (
               <PlatformInviteButton platform={platform} />
             )}
-          {!isUserLoading && !isLoading && platform?.owner?.id === user?.id && (
-            <IconButton aria-label="more">
-              <MoreVert />
-            </IconButton>
-          )}
+          <PlatformMoreButton platform={platform} />
         </div>
       </div>
 
