@@ -52,6 +52,7 @@ export const AuthPage: React.FC = () => {
       enqueueSnackbar("请检查表单", {
         variant: "error",
       });
+      return;
     }
 
     setIsLoading(true);
