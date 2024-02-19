@@ -1,8 +1,8 @@
 {
   "name": "imparty-front",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
+  "homepage": "https://imparty.cn",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -50,5 +50,6 @@
     "eslint-plugin-react-refresh": "^0.4.5",
     "typescript": "^5.2.2",
     "vite": "^5.1.0"
-  }
+  },
+  "repository": "https://github.com/colour93/imparty-front"
 }
