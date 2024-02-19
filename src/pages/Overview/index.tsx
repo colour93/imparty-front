@@ -2,7 +2,7 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 import { useUser } from "../../stores/useUser";
 import { getGreeting } from "../../utils";
-import { Grid, Skeleton, Typography } from "@mui/material";
+import { Skeleton, Typography } from "@mui/material";
 import { RoomCard } from "../../components/RoomCard";
 
 export const OverviewPage: React.FC = () => {
@@ -62,15 +62,11 @@ export const OverviewPage: React.FC = () => {
         </Typography>
       </div>
 
-      {/* <Grid container spacing={2}> */}
       <div className="flex flex-wrap gap-4">
         {toPlayRooms.map((room) => (
-          // <Grid key={room.id} item xs={6} md={4} lg={3} xl={2}>
           <RoomCard key={room.id} room={room} />
-          // </Grid>
         ))}
       </div>
-      {/* </Grid> */}
     </>
   );
 };

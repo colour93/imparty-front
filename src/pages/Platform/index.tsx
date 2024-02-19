@@ -4,7 +4,6 @@ import { usePlatform } from "../../stores/usePlatform";
 import { useParams } from "react-router";
 import {
   Chip,
-  Grid,
   Skeleton,
   SpeedDial,
   SpeedDialAction,
@@ -131,15 +130,11 @@ export const PlatformPage: React.FC = () => {
         </div>
       </div>
 
-      {/* <Grid container spacing={2}> */}
       <div className="flex flex-wrap gap-4">
         {(platform?.rooms ?? []).map((room) => (
-          // <Grid key={room.id} item xs={6} md={4} lg={3}>
           <RoomCard key={room.id} room={room} />
-          // </Grid>
         ))}
       </div>
-      {/* </Grid> */}
     </>
   );
 };
