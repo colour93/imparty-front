@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { HomeWrapper } from "./components/layout/wrapper/home";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
 import { SWRConfig } from "swr";
 import { PlatformDrawer } from "./components/layout/PlatformDrawer";
@@ -8,6 +8,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
 const App: React.FC = () => {
+  const location = useLocation();
+
   const isAuth = useMemo(
     () => location.pathname.toLowerCase() === "/auth",
     [location.pathname]

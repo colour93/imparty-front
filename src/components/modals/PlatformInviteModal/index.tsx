@@ -146,7 +146,7 @@ export const PlatformInviteModal: React.FC<Props> = ({
                     <IconButton
                       onClick={async () => {
                         await navigator.clipboard.writeText(
-                          window.location.origin.concat("/join/").concat(code)
+                          window.location.origin.concat("/#/join/").concat(code)
                         );
                         enqueueSnackbar("已复制", {
                           variant: "info",
@@ -158,7 +158,7 @@ export const PlatformInviteModal: React.FC<Props> = ({
                   </InputAdornment>
                 }
                 readOnly
-                value={window.location.origin.concat("/join/").concat(code)}
+                value={window.location.origin.concat("/#/join/").concat(code)}
                 label="邀请链接"
               />
             </FormControl>
@@ -181,7 +181,7 @@ export const PlatformInviteModal: React.FC<Props> = ({
                             onClick={async () => {
                               await navigator.clipboard.writeText(
                                 window.location.origin
-                                  .concat("/join/")
+                                  .concat("/#/join/")
                                   .concat(platform.id)
                               );
                               enqueueSnackbar("已复制", {
@@ -195,7 +195,7 @@ export const PlatformInviteModal: React.FC<Props> = ({
                       }
                       readOnly
                       value={window.location.origin
-                        .concat("/join/")
+                        .concat("/#/join/")
                         .concat(platform.id)}
                       label="公开链接"
                     />
