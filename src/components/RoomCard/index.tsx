@@ -80,7 +80,7 @@ export const RoomCard: React.FC<Props> = ({ room }) => {
   };
 
   return (
-    <Card variant="outlined" className="!p-3 flex flex-col gap-2">
+    <Card variant="outlined" className="!p-3 flex flex-col gap-2 w-64">
       <div className="flex justify-between">
         <span className="font-bold text-lg">{room.name ?? room.id}</span>
         <div className="flex gap-1">
