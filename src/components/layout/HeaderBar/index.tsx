@@ -7,9 +7,10 @@ import {
   Tooltip,
   Container,
   ListItemIcon,
+  useTheme,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useUser } from "../../../stores/useUser";
 import { UserAvatar } from "../../UserAvatar";
 import { fetcher } from "../../../utils/fetcher";
@@ -19,12 +20,18 @@ import {
   Settings as SettingsIcon,
   Logout as LogoutIcon,
   AccountCircle,
+  DarkMode,
+  LightMode,
 } from "@mui/icons-material";
 import { AvatarUploadModal } from "../../modals/AvatarUploadModal";
 import { UserSettingModal } from "../../modals/UserSettingModal";
 import { MenuItemType } from "../../../typings/utils";
+import React from "react";
+import { ColorModeContext } from "../../../main";
 
 export const HeaderBar: React.FC = () => {
+  const theme = useTheme();
+  const colorMode = useContext(ColorModeContext);
   const userData = useUser();
   const { user, isLoading } = userData;
   const navigate = useNavigate();
@@ -109,38 +116,51 @@ export const HeaderBar: React.FC = () => {
 
           <div className="hidden md:flex flex-1"></div>
 
-          <div className="flex items-center flex-0 gap-3">
-            <span className="hidden md:flex cursor-default">
-              {isLoading ? "加载中" : user?.name}
-            </span>
-            <Tooltip title="设置">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <UserAvatar user={user} />
+          <div className="flex gap-3">
+            <Tooltip title="切换模式">
+              <IconButton
+                onClick={() => {
+                  colorMode.toggleColorMode();
+                }}
+                color="inherit"
+              >
+                {theme.palette.mode === "dark" ? <LightMode /> : <DarkMode />}
               </IconButton>
             </Tooltip>
-            <Menu
-              id="user-menu"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-              className="mt-12"
-            >
-              {USER_MENU.map(({ key, label, icon, onClick }) => (
-                <MenuItem key={key} onClick={onClick}>
-                  {icon && <ListItemIcon>{icon}</ListItemIcon>}
-                  {label}
-                </MenuItem>
-              ))}
-            </Menu>
+
+            <div className="flex items-center flex-0 gap-3">
+              <span className="hidden md:flex cursor-default">
+                {isLoading ? "加载中" : user?.name}
+              </span>
+              <Tooltip title="设置">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <UserAvatar user={user} />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                id="user-menu"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+                className="mt-12"
+              >
+                {USER_MENU.map(({ key, label, icon, onClick }) => (
+                  <MenuItem key={key} onClick={onClick}>
+                    {icon && <ListItemIcon>{icon}</ListItemIcon>}
+                    {label}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </div>
           </div>
         </Toolbar>
       </Container>

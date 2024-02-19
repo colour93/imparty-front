@@ -62,13 +62,15 @@ export const OverviewPage: React.FC = () => {
         </Typography>
       </div>
 
-      <Grid container spacing={2}>
+      {/* <Grid container spacing={2}> */}
+      <div className="flex flex-wrap gap-4">
         {toPlayRooms.map((room) => (
-          <Grid key={room.id} item xs={6} md={4} lg={3} xl={2}>
-            <RoomCard key={room.id} room={room} />
-          </Grid>
+          // <Grid key={room.id} item xs={6} md={4} lg={3} xl={2}>
+          <RoomCard key={room.id} room={room} />
+          // </Grid>
         ))}
-      </Grid>
+      </div>
+      {/* </Grid> */}
     </>
   );
 };

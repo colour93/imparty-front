@@ -131,13 +131,15 @@ export const PlatformPage: React.FC = () => {
         </div>
       </div>
 
-      <Grid container spacing={2}>
+      {/* <Grid container spacing={2}> */}
+      <div className="flex flex-wrap gap-4">
         {(platform?.rooms ?? []).map((room) => (
-          <Grid key={room.id} item xs={6} md={4} lg={3} xl={2}>
-            <RoomCard key={room.id} room={room} />
-          </Grid>
+          // <Grid key={room.id} item xs={6} md={4} lg={3}>
+          <RoomCard key={room.id} room={room} />
+          // </Grid>
         ))}
-      </Grid>
+      </div>
+      {/* </Grid> */}
     </>
   );
 };
