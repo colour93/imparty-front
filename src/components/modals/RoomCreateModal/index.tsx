@@ -96,13 +96,13 @@ export const RoomCreateModal: React.FC<Props> = ({ visible, setVisible }) => {
             onChange={handleInputChange}
             required
           />
-          <TextField
+          {/* <TextField
             label="详情"
             name="description"
             multiline
             value={formData.description}
             onChange={handleInputChange}
-          />
+          /> */}
           <TextField
             type="number"
             label="人数限制"
@@ -111,7 +111,7 @@ export const RoomCreateModal: React.FC<Props> = ({ visible, setVisible }) => {
             onChange={handleInputChange}
             helperText="为 0 则为不限人数"
           />
-          <div className="flex justify-between">
+          <div className="flex flex-col gap-4 md:gap-2 md:flex-row md:justify-between">
             <DateTimePicker
               label="开始时间"
               name="startAt"
