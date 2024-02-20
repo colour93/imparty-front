@@ -130,7 +130,7 @@ export const PlatformPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 [&>*]:flex-grow md:[&>*]:flex-grow-0">
         {(platform?.rooms ?? []).map((room) => (
           <RoomCard key={room.id} room={room} />
         ))}

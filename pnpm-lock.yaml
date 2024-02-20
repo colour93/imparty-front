@@ -50,6 +50,9 @@ dependencies:
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
+  material-ui-confirm:
+    specifier: ^3.0.11
+    version: 3.0.11(@mui/material@5.15.10)(react-dom@18.2.0)(react@18.2.0)
   moment:
     specifier: ^2.30.1
     version: 2.30.1
@@ -98,6 +101,9 @@ dependencies:
   usehooks-ts:
     specifier: ^2.14.0
     version: 2.14.0(react@18.2.0)
+  vite-plugin-version-mark:
+    specifier: ^0.0.10
+    version: 0.0.10
 
 devDependencies:
   '@types/react':
@@ -2240,6 +2246,18 @@ packages:
       yallist: 4.0.0
     dev: true
 
+  /material-ui-confirm@3.0.11(@mui/material@5.15.10)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Euv4QX2qXxfmCwfyWiJ/Mgb7SwSh0D30SNWZS4lRZR14pUnJ6o5ZjkDXncHmIHi6lpyHdi7IRy3H0WCKkO7kZg==}
+    peerDependencies:
+      '@mui/material': '>= 5.0.0'
+      react: ^17.0.0 || ^18.0.0
+      react-dom: ^17.0.0 || ^18.0.0
+    dependencies:
+      '@mui/material': 5.15.10(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
@@ -2958,6 +2976,10 @@ packages:
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+    dev: false
+
+  /vite-plugin-version-mark@0.0.10:
+    resolution: {integrity: sha512-mBagiCiGShmgPkOPGL+M+1LX9lY7p8Rv/wCc13MGKCuiVSkixDPSSRiwnBWX30YD9Re46yfhvvTk4XZjyj3BrA==}
     dev: false
 
   /vite@5.1.2(@types/node@20.11.19):

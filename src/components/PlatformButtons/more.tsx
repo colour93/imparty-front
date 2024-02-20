@@ -9,12 +9,12 @@ import { PlatformInfo } from "../../typings/platform";
 import React, { useMemo, useState } from "react";
 import { useUser } from "../../stores/useUser";
 import { MenuItemType } from "../../typings/utils";
-import { ConfirmModal } from "../modals/ConfirmModal";
 import { fetcher } from "../../utils/fetcher";
 import { enqueueSnackbar } from "notistack";
 import { mutate } from "swr";
 import { useNavigate } from "react-router";
 import { PlatformSettingModal } from "../modals/PlatformSettingModal";
+import { useConfirm } from "material-ui-confirm";
 
 interface Props {
   platform?: PlatformInfo;
@@ -22,6 +22,7 @@ interface Props {
 
 export const PlatformMoreButton: React.FC<Props> = ({ platform }) => {
   const { user } = useUser();
+  const confirm = useConfirm();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -42,22 +43,23 @@ export const PlatformMoreButton: React.FC<Props> = ({ platform }) => {
       });
       return;
     }
-    ConfirmModal({
+    confirm({
       title: "确定删除？",
       content: "您确定要删除平台吗？该操作无法撤销，平台下的房间将一并删除",
-      onOk: async () => {
-        const result = await fetcher("/platform/delete/".concat(platform.id), {
-          method: "delete",
-        });
+      confirmationText: "确定",
+      cancellationText: "取消",
+    }).then(async () => {
+      const result = await fetcher("/platform/delete/".concat(platform.id), {
+        method: "delete",
+      });
 
-        if (result.code === 200) {
-          enqueueSnackbar("操作成功", {
-            variant: "success",
-          });
-          mutate("/user");
-          navigate("/");
-        }
-      },
+      if (result.code === 200) {
+        enqueueSnackbar("操作成功", {
+          variant: "success",
+        });
+        mutate("/user");
+        navigate("/");
+      }
     });
   };
 

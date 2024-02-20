@@ -2,6 +2,10 @@ import {
   TextField,
   Button,
   SelectChangeEvent,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
+  Dialog,
 } from "@mui/material";
 import React, { ChangeEvent, useState } from "react";
 import { enqueueSnackbar } from "notistack";
@@ -10,7 +14,6 @@ import { DateTimePicker } from "@mui/x-date-pickers";
 import { fetcher } from "../../../utils/fetcher";
 import { mutate } from "swr";
 import { useParams } from "react-router";
-import { CommonModal } from "../template";
 
 interface Props {
   visible: boolean;
@@ -75,70 +78,67 @@ export const RoomCreateModal: React.FC<Props> = ({ visible, setVisible }) => {
   };
 
   return (
-    <CommonModal
-      visible={visible}
-      setVisible={setVisible}
-      title="新建房间"
-      footer={
-        <>
-          <Button onClick={() => setVisible(false)}>
-            <span>取消</span>
-          </Button>
-          <LoadingButton loading={isLoading} onClick={() => handleSubmit()}>
-            <span>新建</span>
-          </LoadingButton>
-        </>
-      }
-    >
-      <div className="flex flex-col gap-4">
-        <TextField
-          label="名称"
-          name="name"
-          value={formData.name}
-          onChange={handleInputChange}
-          required
-        />
-        <TextField
-          label="游戏"
-          name="game"
-          value={formData.game}
-          onChange={handleInputChange}
-          required
-        />
-        <TextField
-          label="详情"
-          name="description"
-          multiline
-          value={formData.description}
-          onChange={handleInputChange}
-        />
-        <TextField
-          type="number"
-          label="人数限制"
-          name="total"
-          value={formData.total}
-          onChange={handleInputChange}
-          helperText="为 0 则为不限人数"
-        />
-        <div className="flex justify-between">
-          <DateTimePicker
-            label="开始时间"
-            name="startAt"
-            onChange={(e) => {
-              if (!e) return;
-              setFormData({ ...formData, startAt: e.toString() });
-            }}
+    <Dialog open={visible} onClose={() => setVisible(false)}>
+      <DialogTitle>新建房间</DialogTitle>
+      <DialogContent>
+        <div className="flex flex-col gap-4 mt-2">
+          <TextField
+            label="名称"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            required
           />
-          <DateTimePicker
-            label="结束时间"
-            name="endAt"
-            onChange={(e) => {
-              if (!e) return;
-              setFormData({ ...formData, endAt: e.toString() });
-            }}
+          <TextField
+            label="游戏"
+            name="game"
+            value={formData.game}
+            onChange={handleInputChange}
+            required
           />
+          <TextField
+            label="详情"
+            name="description"
+            multiline
+            value={formData.description}
+            onChange={handleInputChange}
+          />
+          <TextField
+            type="number"
+            label="人数限制"
+            name="total"
+            value={formData.total}
+            onChange={handleInputChange}
+            helperText="为 0 则为不限人数"
+          />
+          <div className="flex justify-between">
+            <DateTimePicker
+              label="开始时间"
+              name="startAt"
+              onChange={(e) => {
+                if (!e) return;
+                setFormData({ ...formData, startAt: e.toString() });
+              }}
+            />
+            <DateTimePicker
+              label="结束时间"
+              name="endAt"
+              onChange={(e) => {
+                if (!e) return;
+                setFormData({ ...formData, endAt: e.toString() });
+              }}
+            />
+          </div>
         </div>
-      </div>
-    </CommonModal>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setVisible(false)}>
+          <span>取消</span>
+        </Button>
+        <LoadingButton loading={isLoading} onClick={() => handleSubmit()}>
+          <span>新建</span>
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
   );
 };

@@ -11,10 +11,29 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import React, { createContext, useMemo, useState } from "react";
+import { ConfirmProvider } from "material-ui-confirm";
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
+interface PlatformDrawerContextProps {
+  drawerVisible: boolean;
+  setDrawerVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export const PlatformDrawerContext = createContext<PlatformDrawerContextProps>({
+  setDrawerVisible: () => {},
+  drawerVisible: false,
+});
+
 export const Root: React.FC = () => {
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const drawerCtx = useMemo(
+    () => ({
+      drawerVisible,
+      setDrawerVisible,
+    }),
+    [drawerVisible]
+  );
+
   const [storageThemeMode, setStorageThemeMode] = useLocalStorageState<
     "light" | "dark"
   >("themeMode", {
@@ -49,9 +68,13 @@ export const Root: React.FC = () => {
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <HashRouter>
-            <Router />
-          </HashRouter>
+          <ConfirmProvider>
+            <PlatformDrawerContext.Provider value={drawerCtx}>
+              <HashRouter>
+                <Router />
+              </HashRouter>
+            </PlatformDrawerContext.Provider>
+          </ConfirmProvider>
         </ThemeProvider>
       </ColorModeContext.Provider>
     </HelmetProvider>

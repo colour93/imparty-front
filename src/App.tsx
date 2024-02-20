@@ -17,7 +17,7 @@ const App: React.FC = () => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
-      <div className="flex">
+      <div className="flex" id="app">
         <SnackbarProvider
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
           autoHideDuration={3000}

@@ -1,11 +1,17 @@
-import { TextField, Button } from "@mui/material";
+import {
+  TextField,
+  Button,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Dialog,
+} from "@mui/material";
 import React, { useState } from "react";
 import { enqueueSnackbar } from "notistack";
 import { LoadingButton } from "@mui/lab";
 import { fetcher } from "../../../utils/fetcher";
 import { mutate } from "swr";
 import { useParams } from "react-router";
-import { CommonModal } from "../template";
 
 interface Props {
   visible: boolean;
@@ -51,30 +57,27 @@ export const RoomJoinModal: React.FC<Props> = ({ visible, setVisible }) => {
   };
 
   return (
-    <CommonModal
-      visible={visible}
-      setVisible={setVisible}
-      title="加入房间"
-      footer={
-        <>
-          <Button onClick={() => setVisible(false)}>
-            <span>取消</span>
-          </Button>
-          <LoadingButton loading={isLoading} onClick={() => handleSubmit()}>
-            <span>加入</span>
-          </LoadingButton>
-        </>
-      }
-    >
-      <div className="flex flex-col gap-4">
-        <TextField
-          label="ID"
-          name="id"
-          value={rid}
-          onChange={(e) => setRid(e.target.value)}
-          required
-        />
-      </div>
-    </CommonModal>
+    <Dialog open={visible} onClose={() => setVisible(false)}>
+      <DialogTitle>加入房间</DialogTitle>
+      <DialogContent>
+        <div className="flex flex-col gap-4 mt-2">
+          <TextField
+            label="ID"
+            name="id"
+            value={rid}
+            onChange={(e) => setRid(e.target.value)}
+            required
+          />
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setVisible(false)}>
+          <span>取消</span>
+        </Button>
+        <LoadingButton loading={isLoading} onClick={() => handleSubmit()}>
+          <span>加入</span>
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
   );
 };

@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
+import { vitePluginVersionMark } from "vite-plugin-version-mark";
 
 const proxy = process.env.VITE_REMOTE_DEV
   ? {
@@ -13,7 +14,7 @@ const proxy = process.env.VITE_REMOTE_DEV
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), vitePluginVersionMark()],
   server: {
     port: 24933,
     proxy,

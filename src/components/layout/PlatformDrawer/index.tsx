@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Divider,
-  Drawer,
   List,
   ListItem,
   ListItemButton,
@@ -16,8 +15,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { PlatformCreateModal } from "../../modals/PlatformCreateModal";
 import { PlatformJoinModal } from "../../modals/PlatformJoinModal";
 import { CheckCircle, Home } from "@mui/icons-material";
+import { PlatformPcDrawer } from "./pc";
+import { PlatformMobileDrawer } from "./mobile";
 
-export const PlatformDrawer: React.FC = () => {
+const PlatformDrawerContent: React.FC = () => {
   const navigate = useNavigate();
   const userData = useUser();
   const { pid } = useParams();
@@ -28,19 +29,8 @@ export const PlatformDrawer: React.FC = () => {
   const { user } = userData;
 
   if (!user) return <></>;
-
   return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        width: 220,
-        flexShrink: 0,
-        "& .MuiDrawer-paper": {
-          width: 220,
-          boxSizing: "border-box",
-        },
-      }}
-    >
+    <>
       <Toolbar />
       <Box sx={{ overflow: "auto" }}>
         <List>
@@ -112,6 +102,19 @@ export const PlatformDrawer: React.FC = () => {
         visible={joinModalVisible}
         setVisible={setJoinModalVisible}
       />
-    </Drawer>
+    </>
+  );
+};
+
+export const PlatformDrawer: React.FC = () => {
+  return (
+    <>
+      <PlatformPcDrawer className="!hidden md:!flex">
+        <PlatformDrawerContent />
+      </PlatformPcDrawer>
+      <PlatformMobileDrawer className="md:!hidden">
+        <PlatformDrawerContent />
+      </PlatformMobileDrawer>
+    </>
   );
 };

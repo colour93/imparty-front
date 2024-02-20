@@ -1,10 +1,16 @@
-import { TextField, Button } from "@mui/material";
+import {
+  TextField,
+  Button,
+  DialogContent,
+  DialogActions,
+  DialogTitle,
+  Dialog,
+} from "@mui/material";
 import React, { useState } from "react";
 import { enqueueSnackbar } from "notistack";
 import { LoadingButton } from "@mui/lab";
 import { fetcher } from "../../../utils/fetcher";
 import { mutate } from "swr";
-import { CommonModal } from "../template";
 
 interface Props {
   visible: boolean;
@@ -42,31 +48,28 @@ export const PlatformJoinModal: React.FC<Props> = ({ visible, setVisible }) => {
   };
 
   return (
-    <CommonModal
-      visible={visible}
-      setVisible={setVisible}
-      title="加入平台"
-      footer={
-        <>
-          <Button onClick={() => setVisible(false)}>
-            <span>取消</span>
-          </Button>
-          <LoadingButton loading={isLoading} onClick={() => handleSubmit()}>
-            <span>加入</span>
-          </LoadingButton>
-        </>
-      }
-    >
-      <div className="flex flex-col gap-4">
-        <TextField
-          label="ID"
-          name="id"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          required
-          helperText="一般为邀请码或者公开平台 ID"
-        />
-      </div>
-    </CommonModal>
+    <Dialog open={visible} onClose={() => setVisible(false)}>
+      <DialogTitle>加入平台</DialogTitle>
+      <DialogContent>
+        <div className="flex flex-col gap-4 mt-2">
+          <TextField
+            label="ID"
+            name="id"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            required
+            helperText="一般为邀请码或者公开平台 ID"
+          />
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setVisible(false)}>
+          <span>取消</span>
+        </Button>
+        <LoadingButton loading={isLoading} onClick={() => handleSubmit()}>
+          <span>加入</span>
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
   );
 };

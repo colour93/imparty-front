@@ -27,14 +27,17 @@ import { AvatarUploadModal } from "../../modals/AvatarUploadModal";
 import { UserSettingModal } from "../../modals/UserSettingModal";
 import { MenuItemType } from "../../../typings/utils";
 import React from "react";
-import { ColorModeContext } from "../../../main";
+import { ColorModeContext, PlatformDrawerContext } from "../../../main";
+import { useAppInfo } from "../../../stores/useAppInfo";
 
 export const HeaderBar: React.FC = () => {
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
   const userData = useUser();
+  const { appInfo, isLoading: isAppInfoLoading } = useAppInfo();
   const { user, isLoading } = userData;
   const navigate = useNavigate();
+  const { setDrawerVisible } = useContext(PlatformDrawerContext);
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -97,11 +100,11 @@ export const HeaderBar: React.FC = () => {
         <Toolbar disableGutters>
           <IconButton
             size="large"
-            aria-label="platform list drawer button"
-            aria-controls="platform-list-drawer"
-            aria-haspopup="true"
             color="inherit"
             className="flex-0 md:!hidden"
+            onClick={() => {
+              setDrawerVisible((v) => !v);
+            }}
           >
             <MenuIcon />
           </IconButton>
@@ -111,7 +114,23 @@ export const HeaderBar: React.FC = () => {
               navigate("/");
             }}
           >
-            <span>Imparty</span>
+            <Tooltip
+              title={
+                <span>
+                  {isAppInfoLoading ? (
+                    "加载中"
+                  ) : (
+                    <>
+                      <span>前端: {window.__IMPARTY_FRONT_VERSION__}</span>
+                      <br />
+                      <span>后端: {appInfo.version}</span>
+                    </>
+                  )}
+                </span>
+              }
+            >
+              <span>Imparty</span>
+            </Tooltip>
           </div>
 
           <div className="hidden md:flex flex-1"></div>

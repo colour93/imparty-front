@@ -14,7 +14,7 @@ export const OverviewPage: React.FC = () => {
 
   return isLoading || !user ? (
     <div className="flex">
-      <div className="flex-0 flex flex-col gap-1 mb-4 w-[220px]">
+      <div className="flex-0 flex-col gap-1 mb-4 w-[220px] !hidden md:!flex">
         <Skeleton
           sx={{ height: 36, width: 180 }}
           animation="wave"
@@ -62,7 +62,7 @@ export const OverviewPage: React.FC = () => {
         </Typography>
       </div>
 
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 [&>*]:flex-grow md:[&>*]:flex-grow-0">
         {toPlayRooms.map((room) => (
           <RoomCard key={room.id} room={room} />
         ))}

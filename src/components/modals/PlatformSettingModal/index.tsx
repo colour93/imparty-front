@@ -7,6 +7,10 @@ import {
   FormLabel,
   Radio,
   RadioGroup,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Dialog,
 } from "@mui/material";
 import _ from "lodash";
 import { useState, ChangeEvent, useMemo } from "react";
@@ -14,7 +18,6 @@ import { LoadingButton } from "@mui/lab";
 import { enqueueSnackbar } from "notistack";
 import { fetcher } from "../../../utils/fetcher";
 import { mutate } from "swr";
-import { CommonModal } from "../template";
 import {
   PlatformInfo,
   PlatformVisible,
@@ -82,63 +85,62 @@ export const PlatformSettingModal: React.FC<Props> = ({
   };
 
   return (
-    <CommonModal
-      visible={visible}
-      setVisible={setVisible}
-      title="设置"
-      footer={
-        <>
-          <Button onClick={() => setVisible(false)}>
-            <span>取消</span>
-          </Button>
-          <LoadingButton
-            loading={isRequestLoading}
-            onClick={() => handleSubmit()}
-          >
-            <span>保存</span>
-          </LoadingButton>
-        </>
-      }
-    >
-      {!platform ? (
-        <div className="h-[400px] flex justify-center items-center">加载中</div>
-      ) : (
-        <div className="flex flex-col gap-4">
-          <TextField
-            label="ID"
-            helperText="创建后不允许更改"
-            disabled
-            value={platform.id}
-          />
-          <TextField
-            label="名称"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-          />
-          <FormControl fullWidth required>
-            <FormLabel id="platform-visible-radio-buttons-group-label">
-              可见范围
-            </FormLabel>
-            <RadioGroup
-              aria-labelledby="platform-visible-radio-buttons-group-label"
-              value={formData.visible}
-              name="visible"
-              row
+    <Dialog open={visible} onClose={() => setVisible(false)}>
+      <DialogTitle>设置</DialogTitle>
+      <DialogContent>
+        {!platform ? (
+          <div className="h-[400px] flex justify-center items-center">
+            加载中
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4 mt-2">
+            <TextField
+              label="ID"
+              helperText="创建后不允许更改"
+              disabled
+              value={platform.id}
+            />
+            <TextField
+              label="名称"
+              name="name"
+              value={formData.name}
               onChange={handleInputChange}
-            >
-              {Object.keys(VISIBLE_MAPPER).map((key) => (
-                <FormControlLabel
-                  key={key}
-                  value={key}
-                  control={<Radio />}
-                  label={VISIBLE_MAPPER[key as PlatformVisible].label}
-                />
-              ))}
-            </RadioGroup>
-          </FormControl>
-        </div>
-      )}
-    </CommonModal>
+            />
+            <FormControl fullWidth required>
+              <FormLabel id="platform-visible-radio-buttons-group-label">
+                可见范围
+              </FormLabel>
+              <RadioGroup
+                aria-labelledby="platform-visible-radio-buttons-group-label"
+                value={formData.visible}
+                name="visible"
+                row
+                onChange={handleInputChange}
+              >
+                {Object.keys(VISIBLE_MAPPER).map((key) => (
+                  <FormControlLabel
+                    key={key}
+                    value={key}
+                    control={<Radio />}
+                    label={VISIBLE_MAPPER[key as PlatformVisible].label}
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
+          </div>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setVisible(false)}>
+          <span>取消</span>
+        </Button>
+        <LoadingButton
+          loading={isRequestLoading}
+          onClick={() => handleSubmit()}
+        >
+          <span>保存</span>
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
   );
 };
