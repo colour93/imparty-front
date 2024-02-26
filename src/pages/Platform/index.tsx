@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { usePlatform } from "../../stores/usePlatform";
+import { usePlatform } from "../../hooks/usePlatform";
 import { useParams } from "react-router";
 import {
   Chip,
@@ -12,22 +12,25 @@ import {
 import { RoomCard } from "../../components/RoomCard";
 import { AddCircleOutline, Login } from "@mui/icons-material";
 import { RoomCreateModal } from "../../components/modals/RoomCreateModal";
-import { enqueueSnackbar } from "notistack";
 import { RoomJoinModal } from "../../components/modals/RoomJoinModal";
 import { VISIBLE_MAPPER } from "../../typings/platform";
 import { PlatformInviteButton } from "../../components/PlatformButtons/invite";
 import { PlatformMoreButton } from "../../components/PlatformButtons/more";
+import { usePlatformRooms } from "../../hooks/usePlatformRooms";
+import { PlatformStatusFilterButton } from "../../components/PlatformButtons/status-filter";
+import { IDChip } from "../../components/Chips/id";
 
 export const PlatformPage: React.FC = () => {
   const { pid } = useParams();
 
-  const { platform, isLoading } = usePlatform(pid);
+  const { platform, isLoading: isPlatformLoading } = usePlatform(pid);
+  const { rooms, isLoading: isRoomsLoading } = usePlatformRooms(pid);
 
   const [sppedDialVisible, setSpeedDialVisible] = useState(false);
   const [roomCreateModalVisible, setRoomCreateModalVisible] = useState(false);
   const [roomJoinModalVisible, setRoomJoinModalVisible] = useState(false);
 
-  return isLoading ? (
+  return isPlatformLoading || isRoomsLoading || !platform ? (
     <>
       <Helmet>
         <title>加载中... - Imparty</title>
@@ -46,7 +49,7 @@ export const PlatformPage: React.FC = () => {
   ) : (
     <>
       <Helmet>
-        <title>{platform?.name || platform?.id || "平台"} - Imparty</title>
+        <title>{platform.name || platform.id || "平台"} - Imparty</title>
       </Helmet>
 
       <RoomCreateModal
@@ -88,32 +91,21 @@ export const PlatformPage: React.FC = () => {
 
       <div className="flex justify-between mb-4 items-center">
         <div className="flex flex-col gap-1">
-          <p className="text-2xl font-bold">{platform?.name || platform?.id}</p>
+          <p className="text-2xl font-bold">{platform.name || platform.id}</p>
           <div className="flex gap-2">
-            <Chip
-              size="small"
-              label={`ID: ${platform?.id}`}
-              onClick={async () => {
-                if (platform) {
-                  await navigator.clipboard.writeText(platform.id);
-                  enqueueSnackbar("已复制", {
-                    variant: "info",
-                  });
-                }
-              }}
-            />
+            <IDChip id={platform.id} />
             <Chip
               size="small"
               label={`可见范围: ${
-                platform ? VISIBLE_MAPPER[platform?.visible].label : "未知"
+                platform ? VISIBLE_MAPPER[platform.visible].label : "未知"
               }`}
               color={
-                platform ? VISIBLE_MAPPER[platform?.visible].color : "default"
+                platform ? VISIBLE_MAPPER[platform.visible].color : "default"
               }
             />
           </div>
           <span className="opacity-60 text-sm">
-            创建于:{" "}
+            创建于：
             {platform &&
               platform.createdAt &&
               new Date(platform.createdAt).toLocaleString()}
@@ -121,17 +113,16 @@ export const PlatformPage: React.FC = () => {
         </div>
 
         <div className="flex">
-          {!isLoading &&
-            platform &&
-            ["public", "invite-only"].includes(platform.visible) && (
-              <PlatformInviteButton platform={platform} />
-            )}
+          <PlatformStatusFilterButton platform={platform} />
+          {["public", "invite-only"].includes(platform.visible) && (
+            <PlatformInviteButton platform={platform} />
+          )}
           <PlatformMoreButton platform={platform} />
         </div>
       </div>
 
       <div className="flex flex-wrap gap-4 [&>*]:flex-grow md:[&>*]:flex-grow-0">
-        {(platform?.rooms ?? []).map((room) => (
+        {(rooms ?? []).map((room) => (
           <RoomCard key={room.id} room={room} />
         ))}
       </div>

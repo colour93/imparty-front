@@ -9,3 +9,7 @@ export interface RoomInfo {
   total: number;
   users: UserBaseInfo[];
 }
+
+export type RoomBaseInfo = Omit<RoomInfo, "users">;
+
+export type RoomStatus = "active" | "expired" | "all";

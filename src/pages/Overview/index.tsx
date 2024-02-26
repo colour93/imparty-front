@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
-import { useUser } from "../../stores/useUser";
+import { useUser } from "../../hooks/useUser";
 import { getGreeting } from "../../utils";
 import { Skeleton, Typography } from "@mui/material";
 import { RoomCard } from "../../components/RoomCard";

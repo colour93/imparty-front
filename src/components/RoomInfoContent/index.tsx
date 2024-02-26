@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { RoomInfo } from "../../typings/room";
 import { FixedSizeList, ListChildComponentProps } from "react-window";
 import {
@@ -12,6 +12,11 @@ import {
 } from "@mui/material";
 import { UserAvatar } from "../UserAvatar";
 import { Delete, Settings } from "@mui/icons-material";
+import { fetcher } from "../../utils/fetcher";
+import { enqueueSnackbar } from "notistack";
+import { mutate } from "swr";
+import { useRoomsUrl } from "../../hooks/usePlatformRooms";
+import { useParams } from "react-router";
 
 interface Props {
   room: RoomInfo;
@@ -36,6 +41,29 @@ const renderRow = (props: ListChildComponentProps) => {
 };
 
 export const RoomInfoContent: React.FC<Props> = ({ room }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const { pid } = useParams();
+  const roomUrl = useRoomsUrl(pid ?? "");
+
+  const handleDeleteRoom = async () => {
+    setIsLoading(true);
+
+    const result = await fetcher("/room/delete/".concat(room.id), {
+      method: "delete",
+    });
+
+    setIsLoading(false);
+
+    if (result.code != 200) return;
+
+    enqueueSnackbar("操作成功", {
+      variant: "success",
+    });
+
+    if (pid) mutate(roomUrl);
+    mutate("/user");
+  };
+
   return (
     <div className="flex flex-col">
       <div className="p-3 flex justify-between">
@@ -47,7 +75,11 @@ export const RoomInfoContent: React.FC<Props> = ({ room }) => {
             </IconButton>
           </Tooltip>
           <Tooltip title="删除房间">
-            <IconButton size="small" disabled>
+            <IconButton
+              size="small"
+              onClick={() => handleDeleteRoom()}
+              disabled={isLoading}
+            >
               <Delete fontSize="inherit" />
             </IconButton>
           </Tooltip>
@@ -67,7 +99,9 @@ export const RoomInfoContent: React.FC<Props> = ({ room }) => {
           {renderRow}
         </FixedSizeList>
       ) : (
-        <span className="p-4 w-full text-center text-xs opacity-70 cursor-default">还没有人加入哦</span>
+        <span className="p-4 w-full text-center text-xs opacity-70 cursor-default">
+          还没有人加入哦
+        </span>
       )}
     </div>
   );

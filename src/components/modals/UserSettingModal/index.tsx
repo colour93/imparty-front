@@ -7,7 +7,7 @@ import {
   DialogActions,
   Dialog,
 } from "@mui/material";
-import { useUser } from "../../../stores/useUser";
+import { useUser } from "../../../hooks/useUser";
 import _ from "lodash";
 import { useState, ChangeEvent, useMemo } from "react";
 import { LoadingButton } from "@mui/lab";

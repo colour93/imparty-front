@@ -5,19 +5,23 @@ import {
   IconButton,
   Popover,
   Skeleton,
+  Tooltip,
 } from "@mui/material";
 import React, { useMemo, useState } from "react";
 import { UserAvatar } from "../UserAvatar";
 import { momentZh } from "../../utils/moment";
 import { LoadingButton } from "@mui/lab";
 import { RoomInfo } from "../../typings/room";
-import { useUser } from "../../stores/useUser";
+import { useUser } from "../../hooks/useUser";
 import { enqueueSnackbar } from "notistack";
 import { fetcher } from "../../utils/fetcher";
 import { mutate } from "swr";
 import { useParams } from "react-router";
 import { Info } from "@mui/icons-material";
 import { RoomInfoContent } from "../RoomInfoContent";
+import { useRoomsUrl } from "../../hooks/usePlatformRooms";
+import { IDChip } from "../Chips/id";
+import { TimeChip } from "../Chips/time";
 
 interface Props {
   room: RoomInfo;
@@ -26,6 +30,7 @@ interface Props {
 export const RoomCard: React.FC<Props> = ({ room }) => {
   const { user } = useUser();
   const { pid } = useParams();
+  const roomsUrl = useRoomsUrl(pid ?? "");
 
   const isIn = useMemo(
     () => room.users.find((u) => u.id === user?.id),
@@ -98,7 +103,7 @@ export const RoomCard: React.FC<Props> = ({ room }) => {
       variant: "success",
     });
 
-    if (pid) mutate("/platform/detail/".concat(pid));
+    if (pid) mutate(roomsUrl);
     else mutate("/user");
   };
 
@@ -111,47 +116,30 @@ export const RoomCard: React.FC<Props> = ({ room }) => {
             {isExpired && <Chip size="small" color="error" label="已过期" />}
             {isFull && <Chip size="small" color="warning" label="已满员" />}
             {isPlaying && <Chip size="small" color="success" label="进行中" />}
-            <IconButton
-              size="small"
-              aria-label="room-info"
-              onClick={handleClick}
-            >
-              <Info fontSize="inherit" />
-            </IconButton>
+            <Tooltip title="更多信息">
+              <IconButton
+                size="small"
+                aria-label="room-info"
+                onClick={handleClick}
+              >
+                <Info fontSize="inherit" />
+              </IconButton>
+            </Tooltip>
           </div>
         </div>
         <div className="flex flex-col gap-2">
           <div>
-            <Chip
-              size="small"
-              label={`ID: ${room.id}`}
-              onClick={async () => {
-                await navigator.clipboard.writeText(room.id);
-                enqueueSnackbar("已复制", {
-                  variant: "info",
-                });
-              }}
-            />
+            <IDChip id={room.id} />
           </div>
           <div>
             <Chip size="small" variant="outlined" label={room.game} />
           </div>
           <div className="flex justify-between items-center">
-            <Chip
-              size="small"
-              variant="outlined"
-              color="primary"
-              label={momentZh(room.startAt).calendar()}
-            />
+            <TimeChip time={room.startAt} type="start" />
             <span className="opacity-80 text-xs">
               {momentZh(room.endAt).diff(momentZh(room.startAt), "hours")} 小时
             </span>
-            <Chip
-              size="small"
-              variant="outlined"
-              color="warning"
-              label={momentZh(room.endAt).calendar()}
-            />
+            <TimeChip time={room.endAt} type="end" />
           </div>
         </div>
         <AvatarGroup

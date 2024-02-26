@@ -4,10 +4,16 @@ import {
   MoreVert,
   Settings,
 } from "@mui/icons-material";
-import { IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
+import {
+  IconButton,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from "@mui/material";
 import { PlatformInfo } from "../../typings/platform";
 import React, { useMemo, useState } from "react";
-import { useUser } from "../../stores/useUser";
+import { useUser } from "../../hooks/useUser";
 import { MenuItemType } from "../../typings/utils";
 import { fetcher } from "../../utils/fetcher";
 import { enqueueSnackbar } from "notistack";
@@ -108,9 +114,11 @@ export const PlatformMoreButton: React.FC<Props> = ({ platform }) => {
   ];
   return isOwner ? (
     <>
-      <IconButton aria-label="more" onClick={handleClick}>
-        <MoreVert />
-      </IconButton>
+      <Tooltip title="更多选项">
+        <IconButton aria-label="more" onClick={handleClick}>
+          <MoreVert />
+        </IconButton>
+      </Tooltip>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}

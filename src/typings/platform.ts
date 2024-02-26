@@ -1,4 +1,4 @@
-import { RoomInfo } from "./room";
+import { RoomBaseInfo } from "./room";
 import { UserBaseInfo } from "./user";
 
 export type PlatformVisible = "public" | "invite-only" | "private";
@@ -8,8 +8,7 @@ export interface PlatformInfo {
   name?: string | null;
   visible: PlatformVisible;
   createdAt: string;
-  rooms: RoomInfo[];
-  users?: UserBaseInfo[];
+  rooms: RoomBaseInfo[];
   owner?: UserBaseInfo;
 }
 

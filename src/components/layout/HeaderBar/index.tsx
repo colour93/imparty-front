@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useContext, useState } from "react";
-import { useUser } from "../../../stores/useUser";
+import { useUser } from "../../../hooks/useUser";
 import { UserAvatar } from "../../UserAvatar";
 import { fetcher } from "../../../utils/fetcher";
 import { enqueueSnackbar } from "notistack";
@@ -28,7 +28,7 @@ import { UserSettingModal } from "../../modals/UserSettingModal";
 import { MenuItemType } from "../../../typings/utils";
 import React from "react";
 import { ColorModeContext, PlatformDrawerContext } from "../../../main";
-import { useAppInfo } from "../../../stores/useAppInfo";
+import { useAppInfo } from "../../../hooks/useAppInfo";
 
 export const HeaderBar: React.FC = () => {
   const theme = useTheme();
@@ -136,7 +136,11 @@ export const HeaderBar: React.FC = () => {
           <div className="hidden md:flex flex-1"></div>
 
           <div className="flex gap-3">
-            <Tooltip title="切换模式">
+            <Tooltip
+              title={`切换${
+                theme.palette.mode === "dark" ? "浅色" : "深色"
+              }模式`}
+            >
               <IconButton
                 onClick={() => {
                   colorMode.toggleColorMode();

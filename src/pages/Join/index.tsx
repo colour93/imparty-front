@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useParams } from "react-router";
-import { useInviteCodeInfo } from "../../stores/useInviteCodeInfo";
+import { useInviteCodeInfo } from "../../hooks/useInviteCodeInfo";
 import { Chip, CircularProgress, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { LoadingButton } from "@mui/lab";

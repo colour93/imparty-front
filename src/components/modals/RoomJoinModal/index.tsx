@@ -12,6 +12,7 @@ import { LoadingButton } from "@mui/lab";
 import { fetcher } from "../../../utils/fetcher";
 import { mutate } from "swr";
 import { useParams } from "react-router";
+import { useRoomsUrl } from "../../../hooks/usePlatformRooms";
 
 interface Props {
   visible: boolean;
@@ -20,6 +21,7 @@ interface Props {
 
 export const RoomJoinModal: React.FC<Props> = ({ visible, setVisible }) => {
   const { pid } = useParams();
+  const roomsUrl = useRoomsUrl(pid ?? "");
   const [rid, setRid] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
@@ -49,7 +51,7 @@ export const RoomJoinModal: React.FC<Props> = ({ visible, setVisible }) => {
 
     if (result.code != 200) return;
 
-    mutate("/platform/detail/".concat(pid));
+    mutate(roomsUrl);
     enqueueSnackbar("加入成功", {
       variant: "success",
     });

@@ -10,7 +10,7 @@ import {
   Toolbar,
 } from "@mui/material";
 import React, { useState } from "react";
-import { useUser } from "../../../stores/useUser";
+import { useUser } from "../../../hooks/useUser";
 import { useNavigate, useParams } from "react-router-dom";
 import { PlatformCreateModal } from "../../modals/PlatformCreateModal";
 import { PlatformJoinModal } from "../../modals/PlatformJoinModal";

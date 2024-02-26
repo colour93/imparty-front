@@ -14,6 +14,7 @@ import { DateTimePicker } from "@mui/x-date-pickers";
 import { fetcher } from "../../../utils/fetcher";
 import { mutate } from "swr";
 import { useParams } from "react-router";
+import { useRoomsUrl } from "../../../hooks/usePlatformRooms";
 
 interface Props {
   visible: boolean;
@@ -22,6 +23,7 @@ interface Props {
 
 export const RoomCreateModal: React.FC<Props> = ({ visible, setVisible }) => {
   const { pid } = useParams();
+  const roomUrl = useRoomsUrl(pid ?? "");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -70,7 +72,7 @@ export const RoomCreateModal: React.FC<Props> = ({ visible, setVisible }) => {
 
     if (result.code != 200) return;
 
-    mutate("/platform/detail/".concat(pid));
+    mutate(roomUrl);
     enqueueSnackbar("创建成功", {
       variant: "success",
     });
